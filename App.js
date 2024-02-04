@@ -18,11 +18,16 @@ export default function App() {
             name="Login"
             component={LoginScreen}
             options={({ navigation }) => ({
+              headerLeft: () => (
+                <Button
+                  onPress={() => navigation.navigate("Instruction1")}
+                  title="Refresh"
+                />
+              ),
               headerRight: () => (
                 <Button
                   onPress={() => navigation.navigate("Instruction1")}
                   title="Info"
-                  color="#fff"
                 />
               ),
             })}
