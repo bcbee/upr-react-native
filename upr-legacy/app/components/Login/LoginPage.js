@@ -1,25 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
-import Header from './Header';
-import Controls from './Controls';
-import Button from '../General/Button';
-import UPRKit from '../../libraries/UPRKit';
+import React from "react";
+import PropTypes from "prop-types";
+import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
+import Header from "./Header";
+import Controls from "./Controls";
+import Button from "../General/Button";
+import UPRKit from "../../libraries/UPRKit";
 
 export default class LoginPage extends React.Component {
   static propTypes = {
-    Session: PropTypes.object.isRequired
+    Session: PropTypes.object.isRequired,
   };
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'UPR: Remote',
+      title: "UPR: Remote",
       headerRight: (
         <Button
           onPress={() =>
             navigation.navigate({
-              routeName: 'InstructionStack',
-              key: 'LoginPage'
+              routeName: "InstructionStack",
+              key: "LoginPage",
             })
           }
           isHeader={true}
@@ -32,7 +32,7 @@ export default class LoginPage extends React.Component {
           isHeader={true}
           icon="refresh-cw"
         />
-      )
+      ),
     };
   };
 
@@ -60,6 +60,6 @@ export default class LoginPage extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
-  }
+    backgroundColor: "#fff",
+  },
 });

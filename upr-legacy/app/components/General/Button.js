@@ -1,14 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 import {
   StyleSheet,
   Text,
   TouchableNativeFeedback,
   TouchableOpacity,
   Platform,
-  View
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+  View,
+} from "react-native";
+import Icon from "react-native-vector-icons/Feather";
 
 export default class Button extends React.Component {
   static propTypes = {
@@ -19,7 +19,7 @@ export default class Button extends React.Component {
     style: PropTypes.any,
     textStyle: PropTypes.any,
     isHeader: PropTypes.bool,
-    isHeaderBack: PropTypes.bool
+    isHeaderBack: PropTypes.bool,
   };
 
   getIcon = () => {
@@ -42,7 +42,7 @@ export default class Button extends React.Component {
               styles.buttonText,
               isHeaderBack ? styles.headerBackText : undefined,
               disabled ? styles.disabledText : undefined,
-              textStyle
+              textStyle,
             ]}
           >
             {title}
@@ -55,14 +55,8 @@ export default class Button extends React.Component {
   };
 
   render() {
-    const {
-      title,
-      onPress,
-      style,
-      isHeader,
-      isHeaderBack,
-      disabled
-    } = this.props;
+    const { title, onPress, style, isHeader, isHeaderBack, disabled } =
+      this.props;
 
     return (
       <TouchableOpacity
@@ -73,7 +67,7 @@ export default class Button extends React.Component {
           isHeader ? styles.header : undefined,
           isHeaderBack ? styles.headerBack : undefined,
           disabled ? styles.disabled : undefined,
-          style
+          style,
         ]}
       >
         {this.getTitle()}
@@ -84,46 +78,46 @@ export default class Button extends React.Component {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#B30298',
+    backgroundColor: "#B30298",
     borderRadius: 5,
-    flexDirection: 'row',
-    alignItems: 'center'
+    flexDirection: "row",
+    alignItems: "center",
   },
   buttonText: {
-    color: 'white',
-    fontFamily: 'SugarcubesBold',
-    fontSize: 20
+    color: "white",
+    fontFamily: "SugarcubesBold",
+    fontSize: 20,
   },
   container: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   header: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     paddingRight: 15,
     paddingLeft: 15,
     paddingTop: 5,
     paddingBottom: 5,
-    flex: 1
+    flex: 1,
   },
   headerBack: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     paddingRight: 15,
     paddingLeft: 10,
-    flex: 1
+    flex: 1,
   },
   headerBackText: {
     paddingLeft: 0,
     fontSize: 18,
-    position: 'relative',
-    right: 5
+    position: "relative",
+    right: 5,
   },
   disabled: {
-    backgroundColor: '#CCC'
+    backgroundColor: "#CCC",
   },
   disabledText: {
-    color: '#000'
-  }
+    color: "#000",
+  },
 });

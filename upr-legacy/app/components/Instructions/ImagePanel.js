@@ -1,11 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, Text, Image, View } from 'react-native';
+import React from "react";
+import PropTypes from "prop-types";
+import { StyleSheet, Text, Image, View } from "react-native";
 
 export default class ImagePanel extends React.Component {
-
   static propTypes = {
-    image: PropTypes.any.isRequired
+    image: PropTypes.any.isRequired,
   };
 
   render() {
@@ -22,13 +21,13 @@ export default class ImagePanel extends React.Component {
 const styles = StyleSheet.create({
   container: {
     height: 160,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#B30298'
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#B30298",
   },
   image: {
     flex: 1,
-    margin: 10
-  }
+    margin: 10,
+  },
 });

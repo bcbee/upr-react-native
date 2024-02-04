@@ -1,17 +1,21 @@
-import { SET_FCM_TOKEN, SET_CREDENTIAL, RESET_DEVICE } from '../actions/DeviceActions';
+import {
+  SET_FCM_TOKEN,
+  SET_CREDENTIAL,
+  RESET_DEVICE,
+} from "../actions/DeviceActions";
 
 const initialState = {};
 
 const actionsMap = {
   [SET_FCM_TOKEN](state, action) {
-    return { ...state, FCMToken: action.token};
+    return { ...state, FCMToken: action.token };
   },
   [SET_CREDENTIAL](state, action) {
-    return { ...state, credential: action.credential};
+    return { ...state, credential: action.credential };
   },
   [RESET_DEVICE](state, action) {
     return initialState;
-  }
+  },
 };
 
 export default function Device(state = initialState, action) {

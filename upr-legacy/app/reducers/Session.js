@@ -2,8 +2,8 @@ import {
   SET_SESSION_TOKEN,
   SET_SESSION_STATE,
   RESET_SESSION,
-  SessionStates
-} from '../actions/SessionActions';
+  SessionStates,
+} from "../actions/SessionActions";
 
 const initialState = { state: SessionStates.DISCONNECTED };
 
@@ -13,7 +13,7 @@ const actionsMap = {
     return {
       token: action.token,
       holdfor: action.holdfor,
-      state: SessionStates.WAITING
+      state: SessionStates.WAITING,
     };
   },
   [SET_SESSION_STATE](state, action) {
@@ -24,7 +24,7 @@ const actionsMap = {
   },
   [RESET_SESSION](state, action) {
     return initialState;
-  }
+  },
 };
 
 export default function Token(state = initialState, action) {

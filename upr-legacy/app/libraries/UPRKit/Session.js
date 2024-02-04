@@ -1,19 +1,19 @@
-import axios from 'axios';
-import _ from 'lodash';
-import { API_ENDPOINT } from './index';
-import { store } from '../../../App';
-import * as SessionActions from '../../actions/SessionActions';
+import axios from "axios";
+import _ from "lodash";
+import { API_ENDPOINT } from "./index";
+import { store } from "../../../App";
+import * as SessionActions from "../../actions/SessionActions";
 
 let previousSessionState;
 let tempSessionInterval;
 
 async function RequestToken() {
   store.dispatch(
-    SessionActions.SetSessionState(SessionActions.SessionStates.DISCONNECTED)
+    SessionActions.SetSessionState(SessionActions.SessionStates.DISCONNECTED),
   );
   const tokenResponse = await axios
     .get(`${API_ENDPOINT}/NewSession`)
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
   const token = tokenResponse.data;
   const holdfor = Math.floor(Math.random() * 900000) + 100000;
   store.dispatch(SessionActions.SetSessionToken(token, holdfor));
@@ -42,10 +42,10 @@ async function QueryTempSession() {
       params: {
         token: Session.token,
         holdfor: Session.holdfor,
-        fcmtoken: Device.FCMToken
-      }
+        fcmtoken: Device.FCMToken,
+      },
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
   const tempSession = tempSessionResponse.data;
   switch (tempSession) {
     case 0:
@@ -55,7 +55,7 @@ async function QueryTempSession() {
       break;
     case 2:
       store.dispatch(
-        SessionActions.SetSessionState(SessionActions.SessionStates.READY)
+        SessionActions.SetSessionState(SessionActions.SessionStates.READY),
       );
       break;
   }
@@ -68,10 +68,10 @@ async function SlideUp() {
     .get(`${API_ENDPOINT}/SlideUp`, {
       params: {
         token: Session.token,
-        holdfor: Session.holdfor
-      }
+        holdfor: Session.holdfor,
+      },
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 }
 
 async function SlideDown() {
@@ -81,10 +81,10 @@ async function SlideDown() {
     .get(`${API_ENDPOINT}/SlideDown`, {
       params: {
         token: Session.token,
-        holdfor: Session.holdfor
-      }
+        holdfor: Session.holdfor,
+      },
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 }
 
 async function PlayMedia() {
@@ -94,10 +94,10 @@ async function PlayMedia() {
     .get(`${API_ENDPOINT}/PlayMedia`, {
       params: {
         token: Session.token,
-        holdfor: Session.holdfor
-      }
+        holdfor: Session.holdfor,
+      },
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 }
 
 export default {
@@ -106,5 +106,5 @@ export default {
   UnsubscribeFromSessionChanges,
   SlideUp,
   SlideDown,
-  PlayMedia
+  PlayMedia,
 };

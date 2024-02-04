@@ -1,19 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, Text, Image, View } from 'react-native';
+import React from "react";
+import PropTypes from "prop-types";
+import { StyleSheet, Text, Image, View } from "react-native";
 //import firebase from 'react-native-firebase';
-import Button from '../General/Button';
-import { SessionStates } from '../../actions/SessionActions';
+import Button from "../General/Button";
+import { SessionStates } from "../../actions/SessionActions";
 
 export default class LoginPage extends React.Component {
   static propTypes = {
-    Session: PropTypes.object.isRequired
+    Session: PropTypes.object.isRequired,
   };
 
   GetToken = () => {
     const { Session } = this.props;
     if (Session.token) return Session.token;
-    return '...';
+    return "...";
   };
 
   GetButtonTitle = () => {
@@ -21,16 +21,16 @@ export default class LoginPage extends React.Component {
 
     switch (Session.state) {
       case SessionStates.DISCONNECTED:
-        return 'Connecting...';
+        return "Connecting...";
         break;
       case SessionStates.WAITING:
-        return 'Waiting...';
+        return "Waiting...";
         break;
       case SessionStates.READY:
-        return 'Tap to start!';
+        return "Tap to start!";
         break;
     }
-    return 'Waiting...';
+    return "Waiting...";
   };
 
   GetButtonDisabled = () => {
@@ -47,7 +47,7 @@ export default class LoginPage extends React.Component {
           title={this.GetButtonTitle()}
           onPress={() => {
             //firebase.analytics().logEvent('start_presentation', {});
-            this.props.navigation.navigate('Control');
+            this.props.navigation.navigate("Control");
           }}
           style={styles.button}
           disabled={this.GetButtonDisabled()}
@@ -60,28 +60,28 @@ export default class LoginPage extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    paddingBottom: 25
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    paddingBottom: 25,
   },
   prompt: {
     fontSize: 18,
     height: 30,
-    textAlign: 'center',
-    color: 'black',
-    fontFamily: 'SugarcubesRegular'
+    textAlign: "center",
+    color: "black",
+    fontFamily: "SugarcubesRegular",
   },
   token: {
     fontSize: 38,
     height: 50,
-    textAlign: 'center',
-    color: 'black',
-    fontFamily: 'BatmanForeverAlternate'
+    textAlign: "center",
+    color: "black",
+    fontFamily: "BatmanForeverAlternate",
   },
   button: {
     margin: 15,
     width: 280,
-    height: 50
-  }
+    height: 50,
+  },
 });

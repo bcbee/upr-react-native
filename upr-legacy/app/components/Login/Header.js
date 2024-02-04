@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, Text, Image, View } from 'react-native';
-import Logo from './Icon.png';
-import Banner from './Banner.png';
+import React from "react";
+import { StyleSheet, Text, Image, View } from "react-native";
+import Logo from "./Icon.png";
+import Banner from "./Banner.png";
 
 export default class LoginPage extends React.Component {
   render() {
@@ -17,15 +17,15 @@ export default class LoginPage extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   logo: {
     flex: 1,
-    margin: 10
+    margin: 10,
   },
   banner: {
-    height: 50
-  }
+    height: 50,
+  },
 });
