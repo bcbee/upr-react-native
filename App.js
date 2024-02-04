@@ -1,7 +1,11 @@
-import Button from "./app/components/Button";
+import { useCallback } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+import Button from "./app/components/Button";
 import LoginScreen from "./app/views/Login";
 import ControlScreen from "./app/views/Control";
 import Instruction1 from "./app/views/Instruction1";
@@ -11,8 +15,24 @@ import Instruction3 from "./app/views/Instruction3";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [fontsLoaded, fontError] = useFonts({
+    BatmanForeverAlternate: require("./assets/fonts/BatmanForeverAlternate.ttf"),
+    SugarcubesBold: require("./assets/fonts/SugarcubesBold.ttf"),
+    SugarcubesRegular: require("./assets/fonts/SugarcubesRegular.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
   return (
-    <NavigationContainer>
+    <NavigationContainer onLayout={onLayoutRootView}>
       <Stack.Navigator
         screenOptions={{
           headerStyle: {

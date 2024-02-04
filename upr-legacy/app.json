@@ -1,4 +1,18 @@
 {
   "name": "upr",
-  "displayName": "upr"
+  "displayName": "upr",
+  "expo": {
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/BatmanForeverAlternate.ttf",
+            "./assets/fonts/SugarcubesBold.ttf",
+            "./assets/fonts/SugarcubesRegular.ttf"
+          ]
+        }
+      ]
+    ]
+  }
 }
