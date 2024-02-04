@@ -1,6 +1,7 @@
 import Button from "../components/Button";
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Image, Text, View, SafeAreaView } from "react-native";
+import * as Haptics from "expo-haptics";
 import {
   AcquireSession,
   SessionInitializing,
@@ -27,6 +28,7 @@ export default function Login({ navigation }) {
         console.log("ready to present");
         clearInterval(checkReadyInterval);
         setReady(true);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
   }
 
