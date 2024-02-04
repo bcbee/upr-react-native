@@ -11,5 +11,5 @@ export default function UPRButton({ title, icon, onPress, style }) {
     );
   }
 
-  return <Button title={title} onPress={onPress} />;
+  return <Button title={title} onPress={onPress} style={style} />;
 }
