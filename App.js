@@ -1,6 +1,7 @@
 import { Button } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { StatusBar } from "expo-status-bar";
 import LoginScreen from "./app/views/Login";
 import ControlScreen from "./app/views/Control";
 import Instruction1 from "./app/views/Instruction1";
@@ -12,7 +13,17 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#340636",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      >
         <Stack.Group>
           <Stack.Screen
             name="Login"
@@ -40,6 +51,7 @@ export default function App() {
           <Stack.Screen name="Instruction3" component={Instruction3} />
         </Stack.Group>
       </Stack.Navigator>
+      <StatusBar style="light" />
     </NavigationContainer>
   );
 }

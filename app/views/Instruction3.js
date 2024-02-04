@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { Button, Text, View } from "react-native";
 
 export default function Instruction3({ navigation }) {
@@ -14,7 +13,6 @@ export default function Instruction3({ navigation }) {
           })
         }
       />
-      <StatusBar style="auto" />
     </View>
   );
 }

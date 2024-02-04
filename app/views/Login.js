@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { Button, Text, View } from "react-native";
 
 export default function Login({ navigation }) {
@@ -9,7 +8,6 @@ export default function Login({ navigation }) {
         title="Join session"
         onPress={() => navigation.navigate("Control")}
       />
-      <StatusBar style="auto" />
     </View>
   );
 }
