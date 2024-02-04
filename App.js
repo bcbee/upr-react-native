@@ -68,9 +68,60 @@ export default function App() {
           <Stack.Screen name="Control" component={ControlScreen} />
         </Stack.Group>
         <Stack.Group screenOptions={{ presentation: "modal" }}>
-          <Stack.Screen name="Instruction1" component={Instruction1} />
-          <Stack.Screen name="Instruction2" component={Instruction2} />
-          <Stack.Screen name="Instruction3" component={Instruction3} />
+          <Stack.Screen
+            name="Instruction1"
+            component={Instruction1}
+            options={({ navigation }) => ({
+              title: "Instructions",
+              headerRight: () => (
+                <Button
+                  onPress={() =>
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: "Login" }],
+                    })
+                  }
+                  icon="x"
+                />
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="Instruction2"
+            component={Instruction2}
+            options={({ navigation }) => ({
+              title: "Instructions",
+              headerRight: () => (
+                <Button
+                  onPress={() =>
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: "Login" }],
+                    })
+                  }
+                  icon="x"
+                />
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="Instruction3"
+            component={Instruction3}
+            options={({ navigation }) => ({
+              title: "Instructions",
+              headerRight: () => (
+                <Button
+                  onPress={() =>
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: "Login" }],
+                    })
+                  }
+                  icon="x"
+                />
+              ),
+            })}
+          />
         </Stack.Group>
       </Stack.Navigator>
       <StatusBar style="light" />
