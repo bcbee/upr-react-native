@@ -52,7 +52,7 @@ export default function App() {
               title: "",
               headerLeft: () => (
                 <Button
-                  onPress={() => navigation.navigate("Instruction1")}
+                  onPress={() => console.log("Refresh")}
                   title="Refresh"
                   icon="refresh-cw"
                 />
