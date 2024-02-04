@@ -1,7 +1,27 @@
 import Button from "../components/Button";
+import { useContext, useEffect } from "react";
 import { StyleSheet, Image, Text, View, SafeAreaView } from "react-native";
+import {
+  AcquireSession,
+  SessionInitializing,
+  UPRContext,
+} from "../model/uprkit";
 
 export default function Login({ navigation }) {
+  const { session, setSession } = useContext(UPRContext);
+
+  async function acquireSession() {
+    const newSession = await AcquireSession();
+    console.log("acquired", newSession);
+    setSession(newSession);
+  }
+
+  useEffect(() => {
+    if (session === SessionInitializing) {
+      acquireSession();
+    }
+  }, [session]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -17,12 +37,13 @@ export default function Login({ navigation }) {
         />
       </View>
       <View style={styles.session}>
-        <Text style={styles.token}>123456</Text>
+        <Text style={styles.token}>{session}</Text>
         <Text style={styles.prompt}>Enter token on presenting device</Text>
         <Button
           title="Join session"
           onPress={() => navigation.navigate("Control")}
           style={styles.joinButton}
+          disabled={session === SessionInitializing}
         />
       </View>
     </SafeAreaView>
