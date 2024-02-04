@@ -18,7 +18,6 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [session, setSession] = useState(SessionInitializing);
   const [holdFor, setHoldFor] = useState();
-  const [fcmToken, setFCMToken] = useState();
 
   const [fontsLoaded, fontError] = useFonts({
     BatmanForeverAlternate: require("./assets/fonts/BatmanForeverAlternate.ttf"),
@@ -37,7 +36,14 @@ export default function App() {
   }
 
   return (
-    <UPRContext.Provider value={{ session, setSession }}>
+    <UPRContext.Provider
+      value={{
+        session,
+        setSession,
+        holdFor,
+        setHoldFor,
+      }}
+    >
       <NavigationContainer onLayout={onLayoutRootView}>
         <Stack.Navigator
           screenOptions={{

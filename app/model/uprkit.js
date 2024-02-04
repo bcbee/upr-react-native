@@ -28,13 +28,14 @@ export async function AcquireSession() {
 }
 
 export async function TempSession(token, holdfor, fcmtoken) {
-  return await axios.get("/TempSession", {
+  const tempSession = await axios.get("/TempSession", {
     params: {
       token,
       holdfor,
       fcmtoken,
     },
-  }).data;
+  });
+  return tempSession.data;
 }
 
 export async function SlideUp(token, holdfor) {

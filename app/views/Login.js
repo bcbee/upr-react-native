@@ -1,19 +1,53 @@
 import Button from "../components/Button";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Image, Text, View, SafeAreaView } from "react-native";
 import {
   AcquireSession,
   SessionInitializing,
   UPRContext,
+  TempSession,
 } from "../model/uprkit";
 
+let checkReadyInterval;
+
 export default function Login({ navigation }) {
-  const { session, setSession } = useContext(UPRContext);
+  const { session, setSession, holdFor, setHoldFor } = useContext(UPRContext);
+  const [ready, setReady] = useState(false);
+
+  async function checkReady(newSession, newHoldFor) {
+    const tempSessionResponse = await TempSession(newSession, newHoldFor);
+    console.log("checking ready", newSession, newHoldFor, tempSessionResponse);
+
+    switch (tempSessionResponse) {
+      case 1:
+        // Keep waiting
+        break;
+      case 2:
+        // Session acquired. Ready to present
+        console.log("ready to present");
+        clearInterval(checkReadyInterval);
+        setReady(true);
+    }
+  }
 
   async function acquireSession() {
+    setReady(false);
+
     const newSession = await AcquireSession();
     console.log("acquired", newSession);
     setSession(newSession);
+
+    if (checkReadyInterval) {
+      clearInterval(checkReadyInterval);
+    }
+
+    const newHoldFor = Math.floor(Math.random() * 900000) + 100000;
+    setHoldFor(newHoldFor);
+
+    checkReadyInterval = setInterval(
+      () => checkReady(newSession, newHoldFor),
+      1000,
+    );
   }
 
   useEffect(() => {
@@ -40,10 +74,10 @@ export default function Login({ navigation }) {
         <Text style={styles.token}>{session}</Text>
         <Text style={styles.prompt}>Enter token on presenting device</Text>
         <Button
-          title="Join session"
+          title={ready ? "Join session" : "Waiting..."}
           onPress={() => navigation.navigate("Control")}
           style={styles.joinButton}
-          disabled={session === SessionInitializing}
+          disabled={!ready}
         />
       </View>
     </SafeAreaView>
