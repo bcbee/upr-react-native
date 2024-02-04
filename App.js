@@ -1,4 +1,4 @@
-import { Button } from "react-native";
+import Button from "./app/components/Button";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
@@ -29,16 +29,18 @@ export default function App() {
             name="Login"
             component={LoginScreen}
             options={({ navigation }) => ({
+              title: "",
               headerLeft: () => (
                 <Button
                   onPress={() => navigation.navigate("Instruction1")}
                   title="Refresh"
+                  icon="refresh-cw"
                 />
               ),
               headerRight: () => (
                 <Button
                   onPress={() => navigation.navigate("Instruction1")}
-                  title="Info"
+                  icon="info"
                 />
               ),
             })}
