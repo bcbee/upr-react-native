@@ -1,26 +1,30 @@
+import { useContext } from "react";
 import Button from "../components/Button";
 import { SafeAreaView, StyleSheet } from "react-native";
+import { UPRContext, SlideUp, SlideDown, PlayMedia } from "../model/uprkit";
 
 export default function ControlScreen() {
+  const { session, holdFor } = useContext(UPRContext);
+
   return (
     <SafeAreaView style={styles.container}>
       <Button
         title="Media"
         style={styles.button}
         textStyle={styles.buttonText}
-        onPress={() => console.log("Media")}
+        onPress={() => PlayMedia(session, holdFor)}
       />
       <Button
         title="Previous"
         style={styles.button}
         textStyle={styles.buttonText}
-        onPress={() => console.log("Previous")}
+        onPress={() => SlideDown(session, holdFor)}
       />
       <Button
         title="Next"
         style={styles.button}
         textStyle={styles.buttonText}
-        onPress={() => console.log("Next")}
+        onPress={() => SlideUp(session, holdFor)}
       />
     </SafeAreaView>
   );
