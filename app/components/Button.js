@@ -12,7 +12,7 @@ export default function UPRButton({
 }) {
   if (icon) {
     return (
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={onPress} style={styles.imageButton}>
         <Icon name={icon} size={28} color="#FFF" />
       </TouchableOpacity>
     );
@@ -43,6 +43,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
+  },
+  imageButton: {
+    padding: 10,
+    margin: -10,
   },
   buttonText: {
     color: "white",
