@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.dbztech.universalpresenterremote.upr"
+      "package": "com.dbztech.universalpresenterremote.upr",
+      "versionCode": 21
     },
     "web": {
       "favicon": "./assets/favicon.png"
