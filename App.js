@@ -18,6 +18,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [session, setSession] = useState(SessionInitializing);
   const [holdFor, setHoldFor] = useState();
+  const [ready, setReady] = useState(false);
 
   const [fontsLoaded, fontError] = useFonts({
     BatmanForeverAlternate: require("./assets/fonts/BatmanForeverAlternate.ttf"),
@@ -42,6 +43,8 @@ export default function App() {
         setSession,
         holdFor,
         setHoldFor,
+        ready,
+        setReady,
       }}
     >
       <NavigationContainer onLayout={onLayoutRootView}>

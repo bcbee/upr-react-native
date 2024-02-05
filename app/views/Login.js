@@ -12,19 +12,22 @@ import {
 let checkReadyInterval;
 
 export default function Login({ navigation }) {
-  const { session, setSession, holdFor, setHoldFor } = useContext(UPRContext);
-  const [ready, setReady] = useState(false);
+  const { session, setSession, setHoldFor, ready, setReady } =
+    useContext(UPRContext);
 
   async function checkReady(newSession, newHoldFor) {
     const tempSessionResponse = await TempSession(newSession, newHoldFor);
     console.log("checking ready", newSession, newHoldFor, tempSessionResponse);
 
     switch (tempSessionResponse) {
+      case 0:
+        // Error, reset session.
+        acquireSession();
       case 1:
-        // Keep waiting
+        // Keep waiting.
         break;
       case 2:
-        // Session acquired. Ready to present
+        // Session acquired. Ready to present.
         console.log("ready to present");
         clearInterval(checkReadyInterval);
         setReady(true);
