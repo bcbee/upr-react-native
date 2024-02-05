@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "UPR: Remote",
+    "slug": "upr",
+    "version": "5.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.dbztech.universalpresenterremote.upr",
+      "versionCode": 23
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9299b90b-0c43-4ff4-b98b-a1b7ee4f20de"
+      }
+    },
+    "owner": "bcbee"
+  }
+}
