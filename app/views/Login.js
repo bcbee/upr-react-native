@@ -23,6 +23,7 @@ export default function Login({ navigation }) {
       case 0:
         // Error, reset session.
         acquireSession();
+        break;
       case 1:
         // Keep waiting.
         break;
