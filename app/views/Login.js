@@ -1,5 +1,5 @@
 import Button from "../components/Button";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { StyleSheet, Image, Text, View, SafeAreaView } from "react-native";
 import * as Haptics from "expo-haptics";
 import {
@@ -9,11 +9,11 @@ import {
   TempSession,
 } from "../model/uprkit";
 
-let checkReadyInterval;
-
 export default function Login({ navigation }) {
   const { session, setSession, setHoldFor, ready, setReady } =
     useContext(UPRContext);
+
+  const checkReadyIntervalRef = useRef(null);
 
   async function checkReady(newSession, newHoldFor) {
     const tempSessionResponse = await TempSession(newSession, newHoldFor);
@@ -22,14 +22,19 @@ export default function Login({ navigation }) {
     switch (tempSessionResponse) {
       case 0:
         // Error, reset session.
+        console.log("error acquiring session, resetting");
         acquireSession();
+        break;
       case 1:
         // Keep waiting.
         break;
       case 2:
         // Session acquired. Ready to present.
         console.log("ready to present");
-        clearInterval(checkReadyInterval);
+        const intervalId = checkReadyIntervalRef.current;
+        console.log("clear interval", intervalId);
+        clearInterval(intervalId);
+        checkReadyIntervalRef.current = null;
         setReady(true);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
@@ -42,21 +47,30 @@ export default function Login({ navigation }) {
     console.log("acquired", newSession);
     setSession(newSession);
 
-    if (checkReadyInterval) {
-      clearInterval(checkReadyInterval);
+    if (checkReadyIntervalRef.current !== null) {
+      // Clear the previous interval if it exists
+      const intervalId = checkReadyIntervalRef.current;
+      console.log("clear interval", intervalId);
+      clearInterval(intervalId);
+    } else {
+      console.log("no interval to clear");
     }
 
     const newHoldFor = Math.floor(Math.random() * 900000) + 100000;
     setHoldFor(newHoldFor);
 
-    checkReadyInterval = setInterval(
+    const intervalId = setInterval(
       () => checkReady(newSession, newHoldFor),
       1000,
     );
+    checkReadyIntervalRef.current = intervalId;
+
+    console.log("set interval", intervalId);
   }
 
   useEffect(() => {
     if (session === SessionInitializing) {
+      console.log("acquire session via useEffect");
       acquireSession();
     }
   }, [session]);

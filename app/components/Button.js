@@ -1,6 +1,6 @@
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { Text } from "react-native";
-import Icon from "react-native-vector-icons/Feather";
+import Icon from "@react-native-vector-icons/feather";
 
 export default function UPRButton({
   title,

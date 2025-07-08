@@ -23,7 +23,8 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.dbztech.universalpresenterremote.upr",
-      "versionCode": 24
+      "versionCode": 24,
+      "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
