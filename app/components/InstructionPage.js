@@ -1,20 +1,29 @@
-import Button from "./Button";
-import {
-  Text,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function InstructionPage({ navigation, image, text, nextPage }) {
+import Button from "./Button";
+import { colors, fonts, radii, spacing } from "../theme";
+
+export default function InstructionPage({
+  navigation,
+  image,
+  step,
+  title,
+  text,
+  nextPage,
+}) {
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.imagePanel}>
-        <Image source={image} style={styles.image} resizeMode="contain" />
-      </View>
-      <ScrollView style={styles.textScrollContainer}>
+    <SafeAreaView style={styles.container} edges={["bottom"]}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.imagePanel}>
+          <Image source={image} style={styles.image} resizeMode="contain" />
+        </View>
+        <View style={styles.stepRow}>
+          <View style={styles.stepBadge}>
+            <Text style={styles.stepNumber}>{step}</Text>
+          </View>
+          <Text style={styles.title}>{title}</Text>
+        </View>
         <Text style={styles.text}>{text}</Text>
       </ScrollView>
       <Button
@@ -36,34 +45,59 @@ export default function InstructionPage({ navigation, image, text, nextPage }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: colors.section,
   },
-  textScrollContainer: {
-    flex: 1,
-    padding: 15,
-  },
-  text: {
-    color: "black",
-    fontFamily: "SugarcubesRegular",
-    fontSize: 17,
-  },
-  button: {
-    margin: 15,
-    width: 280,
-    height: 50,
-    marginBottom: 25,
+  content: {
+    padding: spacing.lg,
   },
 
   imagePanel: {
-    height: 160,
-    flexDirection: "row",
-    justifyContent: "center",
+    height: 180,
+    borderRadius: radii.tile,
+    backgroundColor: colors.dark,
     alignItems: "center",
-    backgroundColor: "#B30298",
+    justifyContent: "center",
+    marginBottom: spacing.lg,
   },
   image: {
     flex: 1,
-    margin: 10,
+    margin: spacing.md,
+    alignSelf: "stretch",
+  },
+
+  stepRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
+  },
+  stepBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 999,
+    backgroundColor: colors.accent,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  stepNumber: {
+    fontFamily: fonts.display,
+    fontSize: 16,
+    color: "#FFFFFF",
+  },
+  title: {
+    flex: 1,
+    fontFamily: fonts.display,
+    fontSize: 22,
+    color: colors.ink,
+  },
+  text: {
+    fontFamily: fonts.body,
+    fontSize: 15,
+    lineHeight: 24,
+    color: colors.muted,
+  },
+
+  button: {
+    margin: spacing.lg,
   },
 });

@@ -6,11 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -23,14 +18,23 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.dbztech.universalpresenterremote.upr",
-      "versionCode": 24,
-      "edgeToEdgeEnabled": true
+      "versionCode": 24
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#EDEAF2"
+        }
+      ],
+      "expo-status-bar"
     ],
     "extra": {
       "eas": {
