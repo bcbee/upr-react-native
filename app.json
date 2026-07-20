@@ -2,7 +2,7 @@
   "expo": {
     "name": "UPR: Remote",
     "slug": "upr",
-    "version": "5.0.1",
+    "version": "6.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,7 +18,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.dbztech.universalpresenterremote.upr",
-      "versionCode": 24
+      "versionCode": 25
     },
     "web": {
       "favicon": "./assets/favicon.png"
