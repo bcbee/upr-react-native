@@ -1,5 +1,11 @@
 import { useContext, useEffect, useRef } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
@@ -15,10 +21,16 @@ import {
   TempSession,
 } from "../model/uprkit";
 
+// Below this window width the pairing card stacks under the hero copy;
+// at or above it (landscape phones, tablets) the two sit side by side.
+const WIDE_LAYOUT_MIN_WIDTH = 800;
+
 export default function Login({ navigation }) {
   const { session, setSession, setHoldFor, ready, setReady } =
     useContext(UPRContext);
   const isFocused = useIsFocused();
+  const { width } = useWindowDimensions();
+  const isWide = width >= WIDE_LAYOUT_MIN_WIDTH;
 
   const checkReadyIntervalRef = useRef(null);
   const acquiringSessionRef = useRef(null);
@@ -97,40 +109,44 @@ export default function Login({ navigation }) {
   }, [isFocused, session]);
 
   return (
-    <SafeAreaView style={styles.container} edges={["bottom"]}>
-      <View style={styles.content}>
-        <Image
-          source={require("../../assets/images/upr_logo.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-        <Text style={styles.eyebrow}>Universal Presenter Remote</Text>
-        <Text style={styles.title}>Pair your remote</Text>
-        <Text style={styles.lead}>
-          Enter the token below into the UPR control software on your presenting
-          computer. As soon as it connects, you can begin.
-        </Text>
-
-        <View style={styles.tokenCard}>
-          <Text style={styles.tokenLabel}>Your connection token</Text>
-          <TokenDigits token={session} />
-        </View>
-
-        <View style={styles.statusRow}>
-          <StatusDot connected={ready} />
-          <Text style={ready ? styles.statusReady : styles.statusWaiting}>
-            {ready
-              ? "Control software connected"
-              : "Waiting for the control software..."}
+    <SafeAreaView style={styles.container} edges={["bottom", "left", "right"]}>
+      <View style={[styles.content, isWide && styles.contentWide]}>
+        <View style={[styles.hero, isWide && styles.heroWide]}>
+          <Image
+            source={require("../../assets/images/upr_logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <Text style={styles.eyebrow}>Universal Presenter Remote</Text>
+          <Text style={styles.title}>Pair your remote</Text>
+          <Text style={styles.lead}>
+            Enter the token below into the UPR control software on your
+            presenting computer. As soon as it connects, you can begin.
           </Text>
         </View>
 
-        <Button
-          title={ready ? "Begin" : "Waiting..."}
-          onPress={() => navigation.navigate("Control")}
-          style={styles.beginButton}
-          disabled={!ready}
-        />
+        <View style={[styles.pairing, isWide && styles.pairingWide]}>
+          <View style={styles.tokenCard}>
+            <Text style={styles.tokenLabel}>Your connection token</Text>
+            <TokenDigits token={session} />
+          </View>
+
+          <View style={styles.statusRow}>
+            <StatusDot connected={ready} />
+            <Text style={ready ? styles.statusReady : styles.statusWaiting}>
+              {ready
+                ? "Control software connected"
+                : "Waiting for the control software..."}
+            </Text>
+          </View>
+
+          <Button
+            title={ready ? "Begin" : "Waiting..."}
+            onPress={() => navigation.navigate("Control")}
+            style={styles.beginButton}
+            disabled={!ready}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -146,6 +162,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: spacing.lg,
+  },
+  contentWide: {
+    flexDirection: "row",
+    gap: spacing.xxl,
+  },
+  // Grows so the logo inside can absorb leftover vertical space, exactly as
+  // it did when it was a direct child of content.
+  hero: {
+    flexGrow: 1,
+    flexShrink: 1,
+    alignItems: "center",
+    alignSelf: "stretch",
+  },
+  heroWide: {
+    flex: 1,
+    maxWidth: 400,
+    justifyContent: "center",
+  },
+  pairing: {
+    alignItems: "center",
+    alignSelf: "stretch",
+  },
+  pairingWide: {
+    flex: 1,
+    maxWidth: 420,
+    alignSelf: "center",
   },
   // Basis 0 + grow means the logo only consumes leftover vertical space,
   // so it scales down on short screens and caps at 280px on tall ones.
@@ -189,7 +231,10 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xl,
     paddingHorizontal: spacing.lg,
     alignItems: "center",
-    alignSelf: "stretch",
+    // Full width on phones, but capped so the card doesn't sprawl past the
+    // rest of the copy on tablets and other wide screens.
+    width: "100%",
+    maxWidth: 380,
     borderWidth: 1,
     borderColor: colors.border,
     shadowColor: colors.ink,
