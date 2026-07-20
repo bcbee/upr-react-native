@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 
@@ -17,6 +18,7 @@ import {
 export default function Login({ navigation }) {
   const { session, setSession, setHoldFor, ready, setReady } =
     useContext(UPRContext);
+  const isFocused = useIsFocused();
 
   const checkReadyIntervalRef = useRef(null);
 
@@ -66,10 +68,10 @@ export default function Login({ navigation }) {
   }
 
   useEffect(() => {
-    if (session === SessionInitializing) {
+    if (isFocused && session === SessionInitializing) {
       acquireSession();
     }
-  }, [session]);
+  }, [isFocused, session]);
 
   return (
     <SafeAreaView style={styles.container} edges={["bottom"]}>

@@ -14,7 +14,7 @@ export default function InstructionPage({
 }) {
   return (
     <SafeAreaView style={styles.container} edges={["bottom"]}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         <View style={styles.imagePanel}>
           <Image source={image} style={styles.image} resizeMode="contain" />
         </View>
@@ -46,6 +46,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.section,
+  },
+  scroll: {
+    flex: 1,
   },
   content: {
     padding: spacing.lg,

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -19,10 +19,11 @@ import {
 
 const MAX_ACTIVITY_ITEMS = 6;
 
-function RemoteTile({ label, icon, primary, onPress }) {
+function RemoteTile({ label, icon, primary, onPress, disabled }) {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={({ pressed }) => [
         styles.tile,
         primary ? styles.tilePrimary : styles.tileDark,
@@ -39,10 +40,22 @@ function RemoteTile({ label, icon, primary, onPress }) {
 export default function ControlScreen({ navigation }) {
   const { session, holdFor, setSession, setReady } = useContext(UPRContext);
   const [activity, setActivity] = useState([]);
+  const [endingSession, setEndingSession] = useState(false);
+  const endingSessionRef = useRef(false);
 
-  function sendCommand(label, action) {
+  async function sendCommand(label, action) {
+    if (endingSessionRef.current) {
+      return;
+    }
+
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    action(session, holdFor);
+    try {
+      await action(session, holdFor);
+    } catch (e) {
+      console.error(e);
+      return;
+    }
+
     const timestamp = new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
@@ -57,6 +70,12 @@ export default function ControlScreen({ navigation }) {
   }
 
   function endSession() {
+    if (endingSessionRef.current) {
+      return;
+    }
+
+    endingSessionRef.current = true;
+    setEndingSession(true);
     setReady(false);
     setSession(SessionInitializing);
     navigation.popToTop();
@@ -72,7 +91,12 @@ export default function ControlScreen({ navigation }) {
             Connected · Token {FormatToken(session)}
           </Text>
         </View>
-        <Button title="End session" variant="ghost" onPress={endSession} />
+        <Button
+          title="End session"
+          variant="ghost"
+          onPress={endSession}
+          disabled={endingSession}
+        />
       </View>
 
       <View style={styles.activity}>
@@ -94,6 +118,7 @@ export default function ControlScreen({ navigation }) {
       <View style={styles.controls}>
         <Pressable
           onPress={() => sendCommand("Play / pause media", PlayMedia)}
+          disabled={endingSession}
           style={({ pressed }) => [
             styles.mediaPill,
             pressed && styles.mediaPillPressed,
@@ -108,12 +133,14 @@ export default function ControlScreen({ navigation }) {
             label="Previous"
             icon="chevron-left"
             onPress={() => sendCommand("Previous", SlideDown)}
+            disabled={endingSession}
           />
           <RemoteTile
             label="Next"
             icon="chevron-right"
             primary
             onPress={() => sendCommand("Next", SlideUp)}
+            disabled={endingSession}
           />
         </View>
       </View>
