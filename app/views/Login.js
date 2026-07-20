@@ -23,7 +23,7 @@ import {
 
 // Below this window width the pairing card stacks under the hero copy;
 // at or above it (landscape phones, tablets) the two sit side by side.
-const WIDE_LAYOUT_MIN_WIDTH = 800;
+const WIDE_LAYOUT_MIN_WIDTH = 700;
 
 export default function Login({ navigation }) {
   const { session, setSession, setHoldFor, ready, setReady } =
