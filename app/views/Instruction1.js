@@ -1,4 +1,5 @@
 import InstructionPage from "../components/InstructionPage";
+import Link from "../components/Link";
 
 export default function Instruction1({ navigation }) {
   return (
@@ -6,7 +7,17 @@ export default function Instruction1({ navigation }) {
       navigation={navigation}
       step={1}
       title="Download the control software"
-      text="Download the UPR Controller App on the presenting computer. This can be found at universalpresenterremote.com. Once installed, open the application and verify that your computer is connected to the internet."
+      text={
+        <>
+          Download the UPR Controller App on the presenting computer. This can be
+          found at{" "}
+          <Link url="https://universalpresenterremote.com">
+            universalpresenterremote.com
+          </Link>
+          . Once installed, open the application and verify that your computer is
+          connected to the internet.
+        </>
+      }
       image={require("../../assets/images/instruction_1.png")}
       nextPage="Instruction2"
     />
