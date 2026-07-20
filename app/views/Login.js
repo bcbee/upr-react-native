@@ -21,7 +21,7 @@ export default function Login({ navigation }) {
   const isFocused = useIsFocused();
 
   const checkReadyIntervalRef = useRef(null);
-  const acquiringSessionRef = useRef(false);
+  const acquiringSessionRef = useRef(null);
 
   async function checkReady(newSession, newHoldFor) {
     let tempSessionResponse;
@@ -50,15 +50,26 @@ export default function Login({ navigation }) {
   }
 
   async function acquireSession() {
-    if (acquiringSessionRef.current) {
+    // A transition to initializing is an explicit refresh of an older attempt.
+    const isRefresh =
+      session === SessionInitializing &&
+      acquiringSessionRef.current?.session !== SessionInitializing;
+
+    if (acquiringSessionRef.current !== null && !isRefresh) {
       return;
     }
 
-    acquiringSessionRef.current = true;
+    const acquisition = { session };
+    acquiringSessionRef.current = acquisition;
     setReady(false);
 
     try {
       const newSession = await AcquireSession();
+
+      if (acquiringSessionRef.current !== acquisition) {
+        return;
+      }
+
       setSession(newSession);
 
       if (checkReadyIntervalRef.current !== null) {
@@ -73,7 +84,9 @@ export default function Login({ navigation }) {
         1000,
       );
     } finally {
-      acquiringSessionRef.current = false;
+      if (acquiringSessionRef.current === acquisition) {
+        acquiringSessionRef.current = null;
+      }
     }
   }
 
