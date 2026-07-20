@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
@@ -25,19 +24,6 @@ import { colors, fonts } from "./app/theme";
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
-
-function BrandTitle() {
-  return (
-    <View style={styles.brand}>
-      <Image
-        source={require("./assets/images/upr_logo.png")}
-        style={styles.brandLogo}
-        resizeMode="contain"
-      />
-      <Text style={styles.brandName}>Universal Presenter Remote</Text>
-    </View>
-  );
-}
 
 const lightHeader = {
   headerStyle: { backgroundColor: colors.card },
@@ -92,8 +78,7 @@ export default function App() {
               name="Login"
               component={LoginScreen}
               options={({ navigation }) => ({
-                headerTitle: () => <BrandTitle />,
-                headerTitleAlign: "center",
+                title: "",
                 headerLeft: () => (
                   <Button
                     onPress={() => setSession(SessionInitializing)}
@@ -141,20 +126,3 @@ export default function App() {
     </UPRContext.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  brand: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  brandLogo: {
-    width: 28,
-    height: 28,
-  },
-  brandName: {
-    fontFamily: fonts.display,
-    fontSize: 16,
-    color: colors.ink,
-  },
-});

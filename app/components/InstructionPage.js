@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
 
   imagePanel: {
-    height: 180,
+    height: 220,
     borderRadius: radii.tile,
     backgroundColor: colors.dark,
     alignItems: "center",
@@ -60,9 +60,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   image: {
-    flex: 1,
-    margin: spacing.md,
-    alignSelf: "stretch",
+    width: "80%",
+    height: "80%",
   },
 
   stepRow: {
@@ -98,6 +97,9 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    margin: spacing.lg,
+    marginVertical: spacing.lg,
+    alignSelf: "center",
+    width: "100%",
+    maxWidth: 320,
   },
 });

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 
@@ -73,8 +73,13 @@ export default function Login({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container} edges={["bottom"]}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.eyebrow}>UPR Remote</Text>
+      <View style={styles.content}>
+        <Image
+          source={require("../../assets/images/upr_logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <Text style={styles.eyebrow}>Universal Presenter Remote</Text>
         <Text style={styles.title}>Pair your remote</Text>
         <Text style={styles.lead}>
           Enter the token below into the UPR control software on your presenting
@@ -101,7 +106,7 @@ export default function Login({ navigation }) {
           style={styles.beginButton}
           disabled={!ready}
         />
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -112,10 +117,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.section,
   },
   content: {
-    flexGrow: 1,
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: spacing.lg,
+  },
+  // Basis 0 + grow means the logo only consumes leftover vertical space,
+  // so it scales down on short screens and caps at 280px on tall ones.
+  logo: {
+    flexBasis: 0,
+    flexGrow: 1,
+    flexShrink: 1,
+    maxHeight: 280,
+    maxWidth: 280,
+    aspectRatio: 1,
+    marginBottom: spacing.lg,
   },
   eyebrow: {
     fontFamily: fonts.bodyBold,
@@ -185,7 +201,9 @@ const styles = StyleSheet.create({
 
   beginButton: {
     marginTop: spacing.lg,
-    alignSelf: "stretch",
+    marginBottom: spacing.lg,
+    alignSelf: "center",
+    width: "100%",
     maxWidth: 320,
   },
 });

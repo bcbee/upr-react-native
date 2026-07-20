@@ -30,7 +30,7 @@ function RemoteTile({ label, icon, primary, onPress }) {
           (primary ? styles.tilePrimaryPressed : styles.tileDarkPressed),
       ]}
     >
-      <Icon name={icon} size={34} color="#FFFFFF" />
+      <Icon name={icon} size={40} color="#FFFFFF" />
       <Text style={styles.tileLabel}>{label}</Text>
     </Pressable>
   );
@@ -75,31 +75,6 @@ export default function ControlScreen({ navigation }) {
         <Button title="End session" variant="ghost" onPress={endSession} />
       </View>
 
-      <View style={styles.remoteRow}>
-        <RemoteTile
-          label="Previous"
-          icon="chevron-left"
-          onPress={() => sendCommand("Previous", SlideDown)}
-        />
-        <RemoteTile
-          label="Next"
-          icon="chevron-right"
-          primary
-          onPress={() => sendCommand("Next", SlideUp)}
-        />
-      </View>
-
-      <Pressable
-        onPress={() => sendCommand("Play / pause media", PlayMedia)}
-        style={({ pressed }) => [
-          styles.mediaPill,
-          pressed && styles.mediaPillPressed,
-        ]}
-      >
-        <Icon name="play" size={20} color="#FFFFFF" />
-        <Text style={styles.mediaLabel}>Play / pause media</Text>
-      </Pressable>
-
       <View style={styles.activity}>
         <Text style={styles.activityHeading}>Activity</Text>
         {activity.length === 0 ? (
@@ -114,6 +89,33 @@ export default function ControlScreen({ navigation }) {
             </View>
           ))
         )}
+      </View>
+
+      <View style={styles.controls}>
+        <Pressable
+          onPress={() => sendCommand("Play / pause media", PlayMedia)}
+          style={({ pressed }) => [
+            styles.mediaPill,
+            pressed && styles.mediaPillPressed,
+          ]}
+        >
+          <Icon name="play" size={20} color="#FFFFFF" />
+          <Text style={styles.mediaLabel}>Play / pause media</Text>
+        </Pressable>
+
+        <View style={styles.remoteRow}>
+          <RemoteTile
+            label="Previous"
+            icon="chevron-left"
+            onPress={() => sendCommand("Previous", SlideDown)}
+          />
+          <RemoteTile
+            label="Next"
+            icon="chevron-right"
+            primary
+            onPress={() => sendCommand("Next", SlideUp)}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -144,17 +146,16 @@ const styles = StyleSheet.create({
   },
 
   remoteRow: {
+    flex: 1,
     flexDirection: "row",
     gap: spacing.md,
-    marginBottom: spacing.md,
   },
   tile: {
     flex: 1,
-    height: 154,
     borderRadius: radii.tile,
     alignItems: "center",
     justifyContent: "center",
-    gap: spacing.xs,
+    gap: spacing.sm,
     borderWidth: 1,
   },
   tileDark: {
@@ -173,12 +174,13 @@ const styles = StyleSheet.create({
   },
   tileLabel: {
     fontFamily: fonts.displayBold,
-    fontSize: 16,
+    fontSize: 18,
     color: "#FFFFFF",
   },
 
   mediaPill: {
     height: 64,
+    marginBottom: spacing.md,
     borderRadius: radii.tile,
     backgroundColor: colors.onDarkFill,
     borderWidth: 1,
@@ -197,8 +199,15 @@ const styles = StyleSheet.create({
     color: colors.onDark,
   },
 
+  // Fixed 40/60 split between history and controls so the buttons never
+  // move as the activity list grows.
   activity: {
-    marginTop: spacing.xl,
+    flex: 4,
+    overflow: "hidden",
+    marginBottom: spacing.lg,
+  },
+  controls: {
+    flex: 6,
   },
   activityHeading: {
     fontFamily: fonts.bodySemiBold,

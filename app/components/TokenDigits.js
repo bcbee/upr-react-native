@@ -39,5 +39,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.display,
     fontSize: 32,
     color: colors.accent,
+    // Strip Android's extra font padding so the glyph centers optically.
+    includeFontPadding: false,
+    textAlignVertical: "center",
   },
 });
