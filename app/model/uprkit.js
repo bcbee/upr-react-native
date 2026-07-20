@@ -39,7 +39,7 @@ export async function AcquireSession() {
 export async function TempSession(token, holdfor) {
   const tempSession = await axios.get("/TempSession", {
     params: {
-      token,
+      token: FormatToken(token),
       holdfor,
     },
   });
@@ -49,7 +49,7 @@ export async function TempSession(token, holdfor) {
 export async function SlideUp(token, holdfor) {
   await axios.get("/SlideUp", {
     params: {
-      token,
+      token: FormatToken(token),
       holdfor,
     },
   });
@@ -58,7 +58,7 @@ export async function SlideUp(token, holdfor) {
 export async function SlideDown(token, holdfor) {
   await axios.get("/SlideDown", {
     params: {
-      token,
+      token: FormatToken(token),
       holdfor,
     },
   });
@@ -67,7 +67,7 @@ export async function SlideDown(token, holdfor) {
 export async function PlayMedia(token, holdfor) {
   await axios.get("/PlayMedia", {
     params: {
-      token,
+      token: FormatToken(token),
       holdfor,
     },
   });

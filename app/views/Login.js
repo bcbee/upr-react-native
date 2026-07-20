@@ -21,6 +21,7 @@ export default function Login({ navigation }) {
   const isFocused = useIsFocused();
 
   const checkReadyIntervalRef = useRef(null);
+  const acquiringSessionRef = useRef(false);
 
   async function checkReady(newSession, newHoldFor) {
     let tempSessionResponse;
@@ -49,22 +50,31 @@ export default function Login({ navigation }) {
   }
 
   async function acquireSession() {
-    setReady(false);
-
-    const newSession = await AcquireSession();
-    setSession(newSession);
-
-    if (checkReadyIntervalRef.current !== null) {
-      clearInterval(checkReadyIntervalRef.current);
+    if (acquiringSessionRef.current) {
+      return;
     }
 
-    const newHoldFor = Math.floor(Math.random() * 900000) + 100000;
-    setHoldFor(newHoldFor);
+    acquiringSessionRef.current = true;
+    setReady(false);
 
-    checkReadyIntervalRef.current = setInterval(
-      () => checkReady(newSession, newHoldFor),
-      1000,
-    );
+    try {
+      const newSession = await AcquireSession();
+      setSession(newSession);
+
+      if (checkReadyIntervalRef.current !== null) {
+        clearInterval(checkReadyIntervalRef.current);
+      }
+
+      const newHoldFor = Math.floor(Math.random() * 900000) + 100000;
+      setHoldFor(newHoldFor);
+
+      checkReadyIntervalRef.current = setInterval(
+        () => checkReady(newSession, newHoldFor),
+        1000,
+      );
+    } finally {
+      acquiringSessionRef.current = false;
+    }
   }
 
   useEffect(() => {
