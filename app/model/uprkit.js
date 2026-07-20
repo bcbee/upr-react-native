@@ -3,8 +3,9 @@ import { createContext } from "react";
 import { Platform } from "react-native";
 import * as StoreReview from "expo-store-review";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import appConfig from "../../app.json";
 
-export const APP_VERSION = "1.0.0";
+export const APP_VERSION = appConfig.expo.version;
 
 axios.defaults.headers.common = {
   "User-Agent": `uprkit/${APP_VERSION} (${Platform.OS})`,
