@@ -1,7 +1,13 @@
-import Button from "../components/Button";
 import { useContext, useEffect, useRef } from "react";
-import { StyleSheet, Image, Text, View, SafeAreaView } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
+
+import Button from "../components/Button";
+import TokenDigits from "../components/TokenDigits";
+import StatusDot from "../components/StatusDot";
+import { colors, fonts, radii, spacing } from "../theme";
 import {
   AcquireSession,
   SessionInitializing,
@@ -12,28 +18,31 @@ import {
 export default function Login({ navigation }) {
   const { session, setSession, setHoldFor, ready, setReady } =
     useContext(UPRContext);
+  const isFocused = useIsFocused();
 
   const checkReadyIntervalRef = useRef(null);
+  const acquiringSessionRef = useRef(null);
 
   async function checkReady(newSession, newHoldFor) {
-    const tempSessionResponse = await TempSession(newSession, newHoldFor);
-    console.log("checking ready", newSession, newHoldFor, tempSessionResponse);
+    let tempSessionResponse;
+    try {
+      tempSessionResponse = await TempSession(newSession, newHoldFor);
+    } catch (e) {
+      // Network hiccup; keep polling.
+      return;
+    }
 
     switch (tempSessionResponse) {
       case 0:
-        // Error, reset session.
-        console.log("error acquiring session, resetting");
+        // Session expired or errored server-side; start over.
         acquireSession();
         break;
       case 1:
-        // Keep waiting.
+        // Keep waiting for the control software.
         break;
       case 2:
-        // Session acquired. Ready to present.
-        console.log("ready to present");
-        const intervalId = checkReadyIntervalRef.current;
-        console.log("clear interval", intervalId);
-        clearInterval(intervalId);
+        // Control software connected. Ready to present.
+        clearInterval(checkReadyIntervalRef.current);
         checkReadyIntervalRef.current = null;
         setReady(true);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -41,61 +50,85 @@ export default function Login({ navigation }) {
   }
 
   async function acquireSession() {
-    setReady(false);
+    // A transition to initializing is an explicit refresh of an older attempt.
+    const isRefresh =
+      session === SessionInitializing &&
+      acquiringSessionRef.current?.session !== SessionInitializing;
 
-    const newSession = await AcquireSession();
-    console.log("acquired", newSession);
-    setSession(newSession);
-
-    if (checkReadyIntervalRef.current !== null) {
-      // Clear the previous interval if it exists
-      const intervalId = checkReadyIntervalRef.current;
-      console.log("clear interval", intervalId);
-      clearInterval(intervalId);
-    } else {
-      console.log("no interval to clear");
+    if (acquiringSessionRef.current !== null && !isRefresh) {
+      return;
     }
 
-    const newHoldFor = Math.floor(Math.random() * 900000) + 100000;
-    setHoldFor(newHoldFor);
+    const acquisition = { session };
+    acquiringSessionRef.current = acquisition;
+    setReady(false);
 
-    const intervalId = setInterval(
-      () => checkReady(newSession, newHoldFor),
-      1000,
-    );
-    checkReadyIntervalRef.current = intervalId;
+    try {
+      const newSession = await AcquireSession();
 
-    console.log("set interval", intervalId);
+      if (acquiringSessionRef.current !== acquisition) {
+        return;
+      }
+
+      setSession(newSession);
+
+      if (checkReadyIntervalRef.current !== null) {
+        clearInterval(checkReadyIntervalRef.current);
+      }
+
+      const newHoldFor = Math.floor(Math.random() * 900000) + 100000;
+      setHoldFor(newHoldFor);
+
+      checkReadyIntervalRef.current = setInterval(
+        () => checkReady(newSession, newHoldFor),
+        1000,
+      );
+    } finally {
+      if (acquiringSessionRef.current === acquisition) {
+        acquiringSessionRef.current = null;
+      }
+    }
   }
 
   useEffect(() => {
-    if (session === SessionInitializing) {
-      console.log("acquire session via useEffect");
+    if (isFocused && session === SessionInitializing) {
       acquireSession();
     }
-  }, [session]);
+  }, [isFocused, session]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView style={styles.container} edges={["bottom"]}>
+      <View style={styles.content}>
         <Image
           source={require("../../assets/images/upr_logo.png")}
           style={styles.logo}
           resizeMode="contain"
         />
-        <Image
-          source={require("../../assets/images/banner.png")}
-          style={styles.banner}
-          resizeMode="contain"
-        />
-      </View>
-      <View style={styles.session}>
-        <Text style={styles.token}>{session}</Text>
-        <Text style={styles.prompt}>Enter token on presenting device</Text>
+        <Text style={styles.eyebrow}>Universal Presenter Remote</Text>
+        <Text style={styles.title}>Pair your remote</Text>
+        <Text style={styles.lead}>
+          Enter the token below into the UPR control software on your presenting
+          computer. As soon as it connects, you can begin.
+        </Text>
+
+        <View style={styles.tokenCard}>
+          <Text style={styles.tokenLabel}>Your connection token</Text>
+          <TokenDigits token={session} />
+        </View>
+
+        <View style={styles.statusRow}>
+          <StatusDot connected={ready} />
+          <Text style={ready ? styles.statusReady : styles.statusWaiting}>
+            {ready
+              ? "Control software connected"
+              : "Waiting for the control software..."}
+          </Text>
+        </View>
+
         <Button
-          title={ready ? "Join session" : "Waiting..."}
+          title={ready ? "Begin" : "Waiting..."}
           onPress={() => navigation.navigate("Control")}
-          style={styles.joinButton}
+          style={styles.beginButton}
           disabled={!ready}
         />
       </View>
@@ -106,45 +139,96 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.section,
   },
-
-  header: {
+  content: {
     flex: 1,
+    alignItems: "center",
     justifyContent: "center",
-    alignItems: "center",
+    padding: spacing.lg,
   },
+  // Basis 0 + grow means the logo only consumes leftover vertical space,
+  // so it scales down on short screens and caps at 280px on tall ones.
   logo: {
-    flex: 1,
-    margin: 10,
+    flexBasis: 0,
+    flexGrow: 1,
+    flexShrink: 1,
+    maxHeight: 280,
+    maxWidth: 280,
+    aspectRatio: 1,
+    marginBottom: spacing.lg,
   },
-  banner: {
-    height: 50,
+  eyebrow: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 12,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+    color: colors.accent,
+    marginBottom: spacing.xs,
+  },
+  title: {
+    fontFamily: fonts.display,
+    fontSize: 34,
+    color: colors.ink,
+    textAlign: "center",
+    marginBottom: spacing.sm,
+  },
+  lead: {
+    fontFamily: fonts.body,
+    fontSize: 15,
+    lineHeight: 24,
+    color: colors.muted,
+    textAlign: "center",
+    maxWidth: 320,
+    marginBottom: spacing.xl,
   },
 
-  session: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-end",
+  tokenCard: {
+    backgroundColor: colors.card,
+    borderRadius: radii.card,
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.lg,
     alignItems: "center",
-    paddingBottom: 25,
+    alignSelf: "stretch",
+    borderWidth: 1,
+    borderColor: colors.border,
+    shadowColor: colors.ink,
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
-  prompt: {
-    fontSize: 18,
-    height: 30,
-    textAlign: "center",
-    color: "black",
-    fontFamily: "SugarcubesRegular",
+  tokenLabel: {
+    fontFamily: fonts.bodySemiBold,
+    fontSize: 11,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
+    color: colors.muted2,
+    marginBottom: spacing.md,
   },
-  token: {
-    fontSize: 38,
-    height: 50,
-    textAlign: "center",
-    color: "black",
-    fontFamily: "BatmanForeverAlternate",
+
+  statusRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
+    marginTop: spacing.xl,
   },
-  joinButton: {
-    margin: 15,
-    width: 280,
-    height: 50,
+  statusWaiting: {
+    fontFamily: fonts.body,
+    fontSize: 15,
+    color: colors.muted,
+  },
+  statusReady: {
+    fontFamily: fonts.bodySemiBold,
+    fontSize: 15,
+    color: colors.greenInk,
+  },
+
+  beginButton: {
+    marginTop: spacing.lg,
+    marginBottom: spacing.lg,
+    alignSelf: "center",
+    width: "100%",
+    maxWidth: 320,
   },
 });

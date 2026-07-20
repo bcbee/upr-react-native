@@ -1,62 +1,109 @@
-import { TouchableOpacity, StyleSheet } from "react-native";
-import { Text } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import Icon from "@react-native-vector-icons/feather";
 
+import { colors, fonts, radii } from "../theme";
+
+// Variants:
+//  - primary (default): white label on accent magenta
+//  - ghost: outline button for dark surfaces (e.g. "End session")
+//  - icon-only: pass `icon` with no `title` for header actions
 export default function UPRButton({
   title,
   icon,
+  iconColor = colors.ink,
+  variant = "primary",
   onPress,
   disabled,
   style,
   textStyle,
 }) {
-  if (icon) {
+  if (icon && !title) {
     return (
-      <TouchableOpacity onPress={onPress} style={styles.imageButton}>
-        <Icon name={icon} size={28} color="#FFF" />
-      </TouchableOpacity>
+      <Pressable
+        onPress={onPress}
+        hitSlop={10}
+        style={({ pressed }) => [
+          styles.iconButton,
+          pressed && { opacity: 0.6 },
+        ]}
+      >
+        <Icon name={icon} size={24} color={iconColor} />
+      </Pressable>
     );
   }
 
+  const isGhost = variant === "ghost";
+
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
       disabled={disabled}
-      style={[styles.button, disabled ? styles.disabled : undefined, style]}
+      style={({ pressed }) => [
+        isGhost ? styles.ghost : styles.primary,
+        !isGhost && pressed && styles.primaryPressed,
+        isGhost && pressed && styles.ghostPressed,
+        disabled && styles.disabled,
+        style,
+      ]}
     >
       <Text
         style={[
-          styles.buttonText,
-          disabled ? styles.disabledText : undefined,
+          isGhost ? styles.ghostText : styles.primaryText,
+          disabled && styles.disabledText,
           textStyle,
         ]}
       >
         {title}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: "#B30298",
-    borderRadius: 5,
+  primary: {
+    backgroundColor: colors.accent,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
+    paddingVertical: 15,
+    paddingHorizontal: 28,
   },
-  imageButton: {
-    padding: 10,
-    margin: -10,
+  primaryPressed: {
+    backgroundColor: colors.accentActive,
   },
-  buttonText: {
-    color: "white",
-    fontFamily: "SugarcubesBold",
-    fontSize: 20,
+  primaryText: {
+    color: "#FFFFFF",
+    fontFamily: fonts.displayBold,
+    fontSize: 16,
   },
+
+  ghost: {
+    backgroundColor: "transparent",
+    borderRadius: radii.ghost,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  ghostPressed: {
+    backgroundColor: colors.onDarkFill,
+  },
+  ghostText: {
+    color: "rgba(255,255,255,0.7)",
+    fontFamily: fonts.bodySemiBold,
+    fontSize: 13,
+  },
+
   disabled: {
-    backgroundColor: "#CCC",
+    backgroundColor: colors.disabledBg,
   },
   disabledText: {
-    color: "#000",
+    color: colors.disabledText,
+  },
+
+  iconButton: {
+    padding: 6,
   },
 });

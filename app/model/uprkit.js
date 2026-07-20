@@ -1,13 +1,22 @@
 import axios from "axios";
 import { createContext } from "react";
+import { Platform } from "react-native";
 
 axios.defaults.headers.common = {
-  "User-Agent": "uprkit/0.1.0 (Android)",
+  "User-Agent": `uprkit/1.0.0 (${Platform.OS})`,
 };
 axios.defaults.baseURL = "https://universalpresenterremote.com";
 
 export const UPRContext = createContext();
 export const SessionInitializing = "...";
+
+// The server returns the six-digit token as plain text, which axios
+// JSON-parses into a number — dropping leading zeros. Returns the token
+// as a padded string, or null while the session is still initializing.
+export function FormatToken(token) {
+  const raw = token == null ? "" : String(token);
+  return /^\d+$/.test(raw) ? raw.padStart(6, "0") : null;
+}
 
 const delay = (time) => {
   return new Promise((res) => {
@@ -27,12 +36,11 @@ export async function AcquireSession() {
   }
 }
 
-export async function TempSession(token, holdfor, fcmtoken) {
+export async function TempSession(token, holdfor) {
   const tempSession = await axios.get("/TempSession", {
     params: {
-      token,
+      token: FormatToken(token),
       holdfor,
-      fcmtoken,
     },
   });
   return tempSession.data;
@@ -41,7 +49,7 @@ export async function TempSession(token, holdfor, fcmtoken) {
 export async function SlideUp(token, holdfor) {
   await axios.get("/SlideUp", {
     params: {
-      token,
+      token: FormatToken(token),
       holdfor,
     },
   });
@@ -50,7 +58,7 @@ export async function SlideUp(token, holdfor) {
 export async function SlideDown(token, holdfor) {
   await axios.get("/SlideDown", {
     params: {
-      token,
+      token: FormatToken(token),
       holdfor,
     },
   });
@@ -59,7 +67,7 @@ export async function SlideDown(token, holdfor) {
 export async function PlayMedia(token, holdfor) {
   await axios.get("/PlayMedia", {
     params: {
-      token,
+      token: FormatToken(token),
       holdfor,
     },
   });
