@@ -10,6 +10,7 @@ import StatusDot from "../components/StatusDot";
 import { colors, fonts, radii, spacing } from "../theme";
 import {
   FormatToken,
+  MaybeRequestReview,
   SessionInitializing,
   UPRContext,
   SlideUp,
@@ -42,6 +43,9 @@ export default function ControlScreen({ navigation }) {
   const [activity, setActivity] = useState([]);
   const [endingSession, setEndingSession] = useState(false);
   const endingSessionRef = useRef(false);
+  // Session begins when this screen mounts (right after the token connects).
+  const sessionStartRef = useRef(Date.now());
+  const commandCountRef = useRef(0);
 
   async function sendCommand(label, action) {
     if (endingSessionRef.current) {
@@ -55,6 +59,8 @@ export default function ControlScreen({ navigation }) {
       console.error(e);
       return;
     }
+
+    commandCountRef.current += 1;
 
     const timestamp = new Date().toLocaleTimeString([], {
       hour: "2-digit",
@@ -76,6 +82,14 @@ export default function ControlScreen({ navigation }) {
 
     endingSessionRef.current = true;
     setEndingSession(true);
+
+    // Fire-and-forget: the review sheet (if it shows) appears over Login, and
+    // this self-gates on the success thresholds, so it never blocks teardown.
+    MaybeRequestReview({
+      commandCount: commandCountRef.current,
+      sessionMs: Date.now() - sessionStartRef.current,
+    });
+
     setReady(false);
     setSession(SessionInitializing);
     navigation.popToTop();
