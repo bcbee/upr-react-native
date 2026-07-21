@@ -3,7 +3,7 @@
     "name": "UPR: Remote",
     "slug": "upr",
     "version": "6.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "assetBundlePatterns": [

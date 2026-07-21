@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
+import * as ScreenOrientation from "expo-screen-orientation";
 import * as SplashScreen from "expo-splash-screen";
 // Per-weight imports keep the unused font weights out of the bundle.
 import { Manrope_700Bold } from "@expo-google-fonts/manrope/700Bold";
@@ -24,6 +26,8 @@ import { colors, fonts } from "./app/theme";
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
+const { width: screenWidth, height: screenHeight } = Dimensions.get("screen");
+const isTablet = Math.min(screenWidth, screenHeight) >= 600;
 
 const lightHeader = {
   headerStyle: { backgroundColor: colors.card },
@@ -40,6 +44,16 @@ export default function App() {
   const [session, setSession] = useState(SessionInitializing);
   const [holdFor, setHoldFor] = useState();
   const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const orientationPromise = isTablet
+      ? ScreenOrientation.unlockAsync()
+      : ScreenOrientation.lockAsync(
+          ScreenOrientation.OrientationLock.PORTRAIT_UP,
+        );
+
+    orientationPromise.catch(console.warn);
+  }, []);
 
   const [fontsLoaded, fontError] = useFonts({
     Manrope_700Bold,

@@ -2224,6 +2224,11 @@ expo-modules-jsi@~57.0.3:
   resolved "https://registry.yarnpkg.com/expo-modules-jsi/-/expo-modules-jsi-57.0.3.tgz#0a8607293c0231551ea3112d462505edbe784cd5"
   integrity sha512-B+iXJCC5OIXjFKkLLSY2DZ8BGS+hC3PBTrALpV43pHqhXqqZrRH3uTEylZgsoKQO8N8tjmjAua2ucTFHtr1o0w==
 
+expo-screen-orientation@~57.0.1:
+  version "57.0.1"
+  resolved "https://registry.yarnpkg.com/expo-screen-orientation/-/expo-screen-orientation-57.0.1.tgz#f3fc1f2c2a2217347301a40e5de87ba039e253cc"
+  integrity sha512-pvMaOf2N5mcJNiYijIj0+Anza6vrHvcnAfFeO2yjquvPbejiE8oEh9BP9+Hx8VRnzFMoxiO6bG9W/oOFhtFIDA==
+
 expo-server@^57.0.1:
   version "57.0.1"
   resolved "https://registry.yarnpkg.com/expo-server/-/expo-server-57.0.1.tgz#2362bf576e97250490209ac550c2610b88ba4cc1"
