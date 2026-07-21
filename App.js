@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Dimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
@@ -26,8 +26,6 @@ import { colors, fonts } from "./app/theme";
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
-const { width: screenWidth, height: screenHeight } = Dimensions.get("screen");
-const isTablet = Math.min(screenWidth, screenHeight) >= 600;
 
 const lightHeader = {
   headerStyle: { backgroundColor: colors.card },
@@ -44,6 +42,8 @@ export default function App() {
   const [session, setSession] = useState(SessionInitializing);
   const [holdFor, setHoldFor] = useState();
   const [ready, setReady] = useState(false);
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const isTablet = Math.min(screenWidth, screenHeight) >= 600;
 
   useEffect(() => {
     const orientationPromise = isTablet
@@ -53,7 +53,7 @@ export default function App() {
         );
 
     orientationPromise.catch(console.warn);
-  }, []);
+  }, [isTablet]);
 
   const [fontsLoaded, fontError] = useFonts({
     Manrope_700Bold,
